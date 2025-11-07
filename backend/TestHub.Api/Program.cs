@@ -1,11 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using TestHub.Api.Data;
 using TestHub.Api.Models;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TestHubContext>(opt =>
 opt.UseSqlite(builder.Configuration.GetConnectionString("TestHubConnectionString")));
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
 
 builder.Services.AddCors(options =>
 {

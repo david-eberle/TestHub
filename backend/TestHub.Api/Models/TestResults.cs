@@ -9,10 +9,6 @@ namespace TestHub.Api.Models
         public bool Passed { get; set; }
         public double Duration { get; set; }
         public string LogUrl { get; set; }
-        public TestRun TestRun
-        {
-            get; set;
-
-        }
+        public TestRun? TestRun { get; set; }
     }
 }
