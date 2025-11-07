@@ -19,6 +19,7 @@ It’s built with **.NET Core**, **React**, and **Azure** services, offering a u
 
 ## 🧠 Architecture Overview
 
+```text
 +---------------------+          +--------------------+
 | GitHub Actions /    |  POST →  | .NET Core API      |
 | Jenkins Pipeline    | -------- | (TestHub Backend)  |
@@ -31,7 +32,7 @@ It’s built with **.NET Core**, **React**, and **Azure** services, offering a u
                                    | React Frontend |
                                    | (TestHub UI)   |
                                    +----------------+
-
+```
 ---
 
 ## ⚙️ Tech Stack
