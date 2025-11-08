@@ -18,7 +18,6 @@ try {
     console.log('📂 Copying frontend build to wwwroot...')
     const wwwrootPath = path.join('./TestHub.Api', 'wwwroot')
 
-    // Eliminar wwwroot si existe
     if (fs.existsSync(wwwrootPath)) {
         if (os.platform() === 'win32') {
             runCommand('cmd', ['/c', 'rmdir', '/s', '/q', wwwrootPath], process.cwd())
@@ -27,10 +26,8 @@ try {
         }
     }
 
-    // Crear wwwroot
     fs.mkdirSync(wwwrootPath, { recursive: true })
 
-    // Copiar dist a wwwroot
     if (os.platform() === 'win32') {
         runCommand('cmd', ['/c', 'xcopy', '..\\frontend\\dist', wwwrootPath, '/E', '/I', '/Y'], process.cwd())
     } else {

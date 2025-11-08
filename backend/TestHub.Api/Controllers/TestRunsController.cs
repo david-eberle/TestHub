@@ -27,7 +27,6 @@ namespace TestHub.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<TestRun>> PostRun(TestRunRequest request)
         {
-            // Buscar o crear el proyecto
             var project = await _context.Projects
                 .FirstOrDefaultAsync(p => p.Name == request.ProjectName);
 

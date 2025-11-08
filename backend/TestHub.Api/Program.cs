@@ -27,30 +27,21 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// CORS primero
 app.UseCors("AllowAll");
 
-// Swagger solo en dev
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// HTTPS redirection si querés
-//app.UseHttpsRedirection();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
-// Servir SPA y assets
-app.UseDefaultFiles();   // busca index.html
-app.UseStaticFiles();    // sirve js, css, etc.
-
-// Mapear controllers API
 app.MapControllers();
 
-// Fallback SPA: cualquier ruta no API devuelve index.html
 app.MapFallbackToFile("index.html");
 
-// Crear DB si no existe
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<TestHubContext>();
