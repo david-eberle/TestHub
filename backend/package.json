@@ -1,0 +1,11 @@
+{
+    "name": "testhub-backend",
+    "version": "1.0.0",
+    "scripts": {
+        "start-prod-local": "node scripts/run-prod-local.js"
+    },
+    "dependencies": {
+        "cross-spawn": "^7.0.6",
+        "fs-extra": "^11.3.2"
+    }
+}
