@@ -10,9 +10,8 @@ It’s built with **.NET Core**, **React**, and **Azure** services, offering a u
 - 📊 **Dashboard** with test statistics (pass rate, average duration, trends)
 - 🧾 **Detailed test runs** with job name, branch, commit, and timestamp
 - 🔁 **Integration-ready** with GitHub Actions or Jenkins via simple REST API calls
-- 💾 **Database storage** (Azure SQL / PostgreSQL)
+- 💾 **Database storage** (Azure SQL / sqlite)
 - ☁️ **Deployed on Azure** (App Service + Static Web App)
-- 🔐 Optional **API key or OAuth** authentication
 - 🛠️ Future: Slack / Teams notifications when tests fail
 
 ---
@@ -75,31 +74,22 @@ It’s built with **.NET Core**, **React**, and **Azure** services, offering a u
 ## 🖥️ Local Development
 
 ### Prerequisites
-- .NET 8 SDK  
-- SQL Server or PostgreSQL  
-- Azure CLI (optional)
+- .NET 8 SDK   
 
 ### Steps
 
 ```bash
 # Backend
 cd backend
-dotnet restore
-dotnet run
-
-# Frontend
-cd frontend
-npm install
-npm run dev
+npm run start-prod-local
 ```
 
-Then open [http://localhost:5173](http://localhost:5173)
+Then open [http://localhost:5200](http://localhost:5200)
 
 ---
 
 ## 📊 Future Enhancements
 
-- Upload & display screenshots/videos from failed tests  
 - Trend comparison per branch  
 - Email/Slack notifications  
 - Multi-project support  
@@ -109,7 +99,7 @@ Then open [http://localhost:5173](http://localhost:5173)
 ## 👨‍💻 Author
 
 **David Eberle**  
-🔗 [LinkedIn](https://www.linkedin.com/in/davideberle)
+🔗 [LinkedIn](https://www.linkedin.com/in/leonardo-david-eberle/)
 
 ---
 
