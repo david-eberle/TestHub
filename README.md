@@ -10,9 +10,8 @@ It’s built with **.NET Core**, **React**, and **Azure** services, offering a u
 - 📊 **Dashboard** with test statistics (pass rate, average duration, trends)
 - 🧾 **Detailed test runs** with job name, branch, commit, and timestamp
 - 🔁 **Integration-ready** with GitHub Actions or Jenkins via simple REST API calls
-- 💾 **Database storage** (Azure SQL / PostgreSQL)
+- 💾 **Database storage** (Azure SQL / sqlite)
 - ☁️ **Deployed on Azure** (App Service + Static Web App)
-- 🔐 Optional **API key or OAuth** authentication
 - 🛠️ Future: Slack / Teams notifications when tests fail
 
 ---
