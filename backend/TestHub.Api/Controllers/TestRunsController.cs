@@ -52,13 +52,21 @@ namespace TestHub.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TestRun>>> GetRuns()
+        public async Task<ActionResult<IEnumerable<TestRun>>> GetRuns([FromQuery] int? projectId)
         {
-            return await _context.TestRuns
+            var query = _context.TestRuns
                 .Include(r => r.Project)
                 .Include(r => r.Results)
+                .AsQueryable();
+
+            if (projectId.HasValue)
+                query = query.Where(r => r.ProjectId == projectId.Value);
+
+            var runs = await query
                 .OrderByDescending(r => r.Timestamp)
                 .ToListAsync();
+
+            return runs;
         }
     }
 }
