@@ -1,24 +1,12 @@
-body {
-  background: #f8f9fa
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
-.cv-card {
-  transition: transform .18s ease, box-shadow .18s ease;
-  border: 0;
-  background: white;
-}
-
-.cv-card:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
-}
-
-.skill-badge {
-  transition: transform .12s ease, box-shadow .12s ease;
-  cursor: default;
-}
-
-.skill-badge:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, .06);
+.container {
+  max-width: 100% !important;
+  --bs-gutter-x: 0 !important;
 }

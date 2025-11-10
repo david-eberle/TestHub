@@ -1,37 +1,64 @@
 import { useEffect, useState } from 'react'
 import { getProjects } from '../api/testhubApi'
+import Dashboard from './Dashboard'
 
 interface Project {
     id: number
     name: string
 }
 
-interface Props {
-    onSelect: (project: Project) => void
-}
-
-export default function ProjectSelector({ onSelect }: Props) {
-    const [projects, setProjects] = useState < Project[] > ([])
+export default function ProjectSelector() {
+    const [projects, setProjects] = useState<Project[]>([])
+    const [darkMode, setDarkMode] = useState(true)
+    const [activeProject, setActiveProject] = useState<Project | null>(null)
 
     useEffect(() => {
-        getProjects().then(setProjects).catch(console.error)
+        getProjects()
+            .then(data => {
+                setProjects(data)
+                if (data.length > 0) setActiveProject(data[0])
+            })
+            .catch(console.error)
     }, [])
 
+    const handleSelect = (p: Project) => {
+        if (activeProject?.id !== p.id) setActiveProject(p)
+    }
+
     return (
-        <div className='flex flex-col items-center mt-10'>
-            <h2 className='text-xl font-semibold mb-4'>Select a Project</h2>
-            <select
-                className='border rounded p-2'
-                onChange={(e) => {
-                    const selected = projects.find(p => p.id === Number(e.target.value))
-                    if (selected) onSelect(selected)
-                }}
-            >
-                <option value=''>-- Choose project --</option>
-                {projects.map(p => (
-                    <option key={p.id} value={p.id}>{p.name}</option>
-                ))}
-            </select>
+        <div className={darkMode ? 'bg-dark text-white min-vh-100' : 'bg-light text-dark min-vh-100'}>
+            <div className="container-fluid p-0">
+                <div className="d-flex justify-content-between align-items-center p-3">
+                    <h2>⚙️ TestHub</h2>
+                    <button
+                        className="btn btn-outline-primary"
+                        onClick={() => setDarkMode(!darkMode)}
+                    >
+                        {darkMode ? '💡' : '⚫'}
+                    </button>
+                </div>
+
+                <ul className="nav nav-tabs justify-content-start mb-4">
+                    {projects.map(p => (
+                        <li className="nav-item" key={p.id}>
+                            <button
+                                className={`nav-link ${activeProject?.id === p.id ? 'active' : ''} ${darkMode && activeProject?.id !== p.id ? 'bg-secondary text-white' : ''}`}
+                                style={{ cursor: 'pointer', margin: '0 5px' }}
+                                onClick={() => handleSelect(p)}
+                            >
+                                {p.name}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+
+                {activeProject && (
+                    <Dashboard
+                        projectId={activeProject.id}
+                        projectName={activeProject.name}
+                    />
+                )}
+            </div>
         </div>
     )
 }
