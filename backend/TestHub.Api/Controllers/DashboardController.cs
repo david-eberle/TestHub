@@ -16,14 +16,18 @@ namespace TestHub.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetDashboard([FromQuery] int days = 7)
+        public async Task<IActionResult> GetDashboard([FromQuery] int days = 7, [FromQuery] int? projectId = null)
         {
             var fromDate = DateTime.UtcNow.Date.AddDays(-days + 1);
 
-            var recentRuns = await _context.TestRuns
+            var recentRunsQuery = _context.TestRuns
                 .Include(r => r.Results)
-                .Where(r => r.Timestamp.Date >= fromDate)
-                .ToListAsync();
+                .Where(r => r.Timestamp.Date >= fromDate);
+
+            if (projectId.HasValue)
+                recentRunsQuery = recentRunsQuery.Where(r => r.ProjectId == projectId.Value);
+
+            var recentRuns = await recentRunsQuery.ToListAsync();
 
             var lastDay = DateTime.UtcNow.Date;
             var lastDayRuns = recentRuns
