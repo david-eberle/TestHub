@@ -56,6 +56,7 @@ export default function ProjectSelector() {
                     <Dashboard
                         projectId={activeProject.id}
                         projectName={activeProject.name}
+                        darkMode={darkMode}
                     />
                 )}
             </div>
