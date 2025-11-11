@@ -13,3 +13,9 @@ export const getTestRunsByProject = async (projectId: number) => {
     const res = await api.get(`/testruns?projectId=${projectId}`)
     return res.data
 }
+
+export async function getDashboardData(projectId: number) {
+    const res = await fetch(`/api/dashboard?projectId=${projectId}`)
+    if (!res.ok) throw new Error('Error obtaining dashboard')
+    return await res.json()
+}
