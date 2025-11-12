@@ -6,6 +6,7 @@ import SevenDaySuccessBySource from './SevenDaySuccessBySource'
 import SevenDayAverageDuration from './SevenDayAverageDuration'
 import LastDaySummaryCard from './LastDaySummaryCard'
 import SevenDayMostFailed from './SevenDayMostFailed'
+import SevenDaySlowest from './SevenDaySlowest'
 
 interface DashboardProps {
     projectId: number
@@ -79,9 +80,9 @@ export default function Dashboard({ projectId, projectName, darkMode }: Dashboar
                     </div>
                 </div>
                 <div className='col-md-6 mb-3'>
-                    <div className={`card h-100 text-center ${cardClass}`}>
-                        <div className='card-body d-flex align-items-center justify-content-center'>
-                            Overall success rate (7 days)
+                    <div className={`card h-100`} style={{ borderRadius: '0.75rem' }}>
+                        <div className={`card-body ${cardClass}`} style={{ borderRadius: '0.75rem' }}>
+                            <SevenDaySlowest data={data.topSlowestTests} darkMode={darkMode} />
                         </div>
                     </div>
                 </div>

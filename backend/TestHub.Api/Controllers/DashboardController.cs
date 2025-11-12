@@ -39,11 +39,12 @@ namespace TestHub.Api.Controllers
                 {
                     res.Name,
                     res.Passed,
-                    res.Duration,
+                    Duration = Math.Round(res.Duration / 60.0, 2),
                     r.Source
                 }))
-                .OrderByDescending(x => x.Passed)
+                .OrderBy(x => x.Passed)
                 .ToList();
+
 
             var allLastDayResults = lastDayRuns.SelectMany(r => r.Results).ToList();
 
@@ -83,6 +84,7 @@ namespace TestHub.Api.Controllers
                             g.SelectMany(r => r.Results).Count(), 2)
                         : 0
                 })
+                .OrderBy(g => g.Date)
                 .ToList();
 
 
@@ -96,6 +98,7 @@ namespace TestHub.Api.Controllers
                         ? Math.Round(g.SelectMany(r => r.Results).Average(r => r.Duration), 2) / 60.0
                         : 0
                 })
+                .OrderBy(g => g.Date)
                 .ToList();
 
             var topFailedTests = recentRuns
@@ -114,11 +117,18 @@ namespace TestHub.Api.Controllers
                 .Take(3)
                 .ToList();
 
-
-            var allResults = recentRuns.SelectMany(r => r.Results).ToList();
-            double globalSuccessRate = allResults.Any()
-                ? Math.Round(allResults.Count(r => r.Passed) * 100.0 / allResults.Count(), 2)
-                : 0;
+            var topSlowestTests = recentRuns
+                            .SelectMany(r => r.Results)
+                            .GroupBy(r => r.Name)
+                            .Select(g => new
+                            {
+                                TestName = g.Key,
+                                TotalRuns = g.Count(),
+                                AvgDuration = Math.Round(g.Average(r => r.Duration) / 60.0, 2)
+                            })
+                            .OrderByDescending(g => g.AvgDuration)
+                            .Take(3)
+                            .ToList();
 
             return Ok(new
             {
@@ -128,7 +138,7 @@ namespace TestHub.Api.Controllers
                 SuccessRate7Days = successRate7Days,
                 AvgDuration7Days = avgDuration7Days,
                 TopFailedTests = topFailedTests,
-                GlobalSuccessRate = globalSuccessRate
+                TopSlowestTests = topSlowestTests
             });
         }
     }
