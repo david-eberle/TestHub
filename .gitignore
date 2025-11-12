@@ -14,6 +14,7 @@
 *.sln.docstates
 frontend/dist/*
 backend/TestHub.Api/wwwroot/*
+backend/TestHub.Api/TestHub.db*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
