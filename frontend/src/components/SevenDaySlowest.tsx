@@ -1,12 +1,12 @@
-interface SevenDayMostFailedProps {
-    data: { testName: string; totalRuns: number; failCount: number; failRate: number }[]
+interface SevenDaySlowestProps {
+    data: { testName: string; totalRuns: number; avgDuration: number; }[]
     darkMode: boolean
 }
 
-export default function SevenDayMostFailed({ data, darkMode }: SevenDayMostFailedProps) {
+export default function SevenDayMostFailed({ data, darkMode }: SevenDaySlowestProps) {
     return (
         <div className='d-flex flex-column h-100' style={{ backgroundColor: 'transparent', minHeight: '200px' }}>
-            <h5 className='card-title mb-3'>Seven days most failed test (TOP 3)</h5>
+            <h5 className='card-title mb-3'>Seven days slowest test (TOP 3)</h5>
             {data.length === 0 ? (
                 <p className='text-muted mb-0'>No tests found</p>
             ) : (
@@ -23,7 +23,7 @@ export default function SevenDayMostFailed({ data, darkMode }: SevenDayMostFaile
                             <div key={i} className='d-flex align-items-center py-1'>
                                 <div style={{ width: '50%' }}>{t.testName}</div>
                                 <div style={{ width: '25%' }}>{t.totalRuns}</div>
-                                <div style={{ width: '25%' }}>{t.failCount} ({t.failRate} %)</div>
+                                <div style={{ width: '25%' }}>{t.avgDuration} m.</div>
                             </div>
                         ))}
                     </div>

@@ -1,9 +1,9 @@
-interface LastDayTestsCardProps {
+interface LastDaySummaryProps {
     summary: { totalTests: string; successRate: number; totalMinutes: number }
     darkMode: boolean
 }
 
-export default function LastDayTestsCard({ summary: data, darkMode }: LastDayTestsCardProps) {
+export default function LastDayTestsCard({ summary: data, darkMode }: LastDaySummaryProps) {
     return (
         <div className='d-flex flex-column h-100' style={{ backgroundColor: 'transparent' }}>
             <h5 className='card-title mb-3'>Last day Summary</h5>
@@ -21,10 +21,10 @@ export default function LastDayTestsCard({ summary: data, darkMode }: LastDayTes
                         <span className='d-flex align-items-center py-1'>Success Rate</span>
                         <span
                             className={`fw-bold ${data.successRate >= 80
-                                    ? 'text-success'
-                                    : data.successRate >= 50
-                                        ? 'text-warning'
-                                        : 'text-danger'
+                                ? 'text-success'
+                                : data.successRate >= 50
+                                    ? 'text-warning'
+                                    : 'text-danger'
                                 }`}
                         >
                             {data.successRate}%
