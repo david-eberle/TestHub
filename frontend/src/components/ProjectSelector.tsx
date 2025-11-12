@@ -36,20 +36,37 @@ export default function ProjectSelector() {
                     </div>
 
                     <div className="flex-grow-1">
-                        <ul className="nav nav-tabs justify-content-left mb-0">
-                            {projects.map(p => (
-                                <li className="nav-item" key={p.id}>
-                                    <button
-                                        className={`nav-link ${activeProject?.id === p.id ? 'active' : ''} ${darkMode && activeProject?.id !== p.id ? 'bg-secondary text-white' : ''}`}
-                                        style={{ cursor: 'pointer', margin: '0 5px' }}
-                                        onClick={() => handleSelect(p)}
+                        {projects.length === 0 ? (
+                            <ul className="nav nav-tabs justify-content-left mb-0">
+                                <li className="nav-item">
+                                    <span
+                                        className={`nav-link disabled ${darkMode ? 'bg-secondary text-white' : ''
+                                            }`}
+                                        style={{ margin: '0 5px', cursor: 'default' }}
                                     >
-                                        {p.name}
-                                    </button>
+                                        No projects available
+                                    </span>
                                 </li>
-                            ))}
-                        </ul>
+                            </ul>
+                        ) : (
+                            <ul className="nav nav-tabs justify-content-left mb-0">
+                                {projects.map(p => (
+                                    <li className="nav-item" key={p.id}>
+                                        <button
+                                            className={`nav-link ${activeProject?.id === p.id ? 'active' : ''
+                                                } ${darkMode && activeProject?.id !== p.id ? 'bg-secondary text-white' : ''}`}
+                                            style={{ cursor: 'pointer', margin: '0 5px' }}
+                                            onClick={() => handleSelect(p)}
+                                        >
+                                            {p.name}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+
                     </div>
+
 
                     <div className="ms-3">
                         <button

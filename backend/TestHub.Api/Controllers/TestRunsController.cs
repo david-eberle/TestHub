@@ -18,10 +18,10 @@ namespace TestHub.Api.Controllers
 
         public class TestRunRequest
         {
-            public string ProjectName { get; set; }
-            public string Source { get; set; }
-            public string TriggeredBy { get; set; }
-            public List<TestResult> Results { get; set; }
+            public string ProjectName { get; set; } = "N/D";
+            public string Source { get; set; } = "N/D";
+            public string TriggeredBy { get; set; } = "N/D";
+            public required List<TestResult> Results { get; set; }
         }
 
         [HttpPost]
