@@ -21,6 +21,7 @@ namespace TestHub.Api.Controllers
             public string ProjectName { get; set; } = "N/D";
             public string Source { get; set; } = "N/D";
             public string TriggeredBy { get; set; } = "N/D";
+            public DateTime? Timestamp { get; set; }
             public required List<TestResult> Results { get; set; }
         }
 
@@ -41,6 +42,7 @@ namespace TestHub.Api.Controllers
             {
                 ProjectId = project.Id,
                 Source = request.Source,
+                Timestamp = request.Timestamp ?? DateTime.UtcNow,
                 TriggeredBy = request.TriggeredBy,
                 Results = request.Results
             };
