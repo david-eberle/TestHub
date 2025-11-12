@@ -45,6 +45,19 @@ namespace TestHub.Api.Controllers
                 .OrderByDescending(x => x.Passed)
                 .ToList();
 
+            var allLastDayResults = lastDayRuns.SelectMany(r => r.Results).ToList();
+
+            var totalTests = allLastDayResults.Count;
+            var passedTests = allLastDayResults.Count(r => r.Passed);
+            var totalMinutes = allLastDayResults.Sum(r => r.Duration) / 60.0;
+
+            var lastDaySummary = new
+            {
+                TotalTests = totalTests,
+                SuccessRate = totalTests > 0 ? Math.Round(passedTests * 100.0 / totalTests, 2) : 0,
+                TotalMinutes = Math.Round(totalMinutes, 2)
+            };
+
             var successRateBySource = lastDayRuns
                 .GroupBy(r => r.Source)
                 .Select(g => new
@@ -72,6 +85,7 @@ namespace TestHub.Api.Controllers
                 })
                 .ToList();
 
+
             var avgDuration7Days = recentRuns
                 .GroupBy(r => new { Date = r.Timestamp.Date, r.Source })
                 .Select(g => new
@@ -79,19 +93,27 @@ namespace TestHub.Api.Controllers
                     g.Key.Date,
                     g.Key.Source,
                     AvgDuration = g.SelectMany(r => r.Results).Any()
-                        ? Math.Round(g.SelectMany(r => r.Results).Average(r => r.Duration), 2)
+                        ? Math.Round(g.SelectMany(r => r.Results).Average(r => r.Duration), 2) / 60.0
                         : 0
                 })
                 .ToList();
 
             var topFailedTests = recentRuns
                 .SelectMany(r => r.Results)
-                .Where(r => !r.Passed)
                 .GroupBy(r => r.Name)
-                .Select(g => new { TestName = g.Key, FailCount = g.Count() })
+                .Select(g => new
+                {
+                    TestName = g.Key,
+                    TotalRuns = g.Count(),
+                    FailCount = g.Count(r => !r.Passed),
+                    FailRate = g.Count() > 0
+                        ? Math.Round(g.Count(r => !r.Passed) * 100.0 / g.Count(), 2)
+                        : 0
+                })
                 .OrderByDescending(g => g.FailCount)
-                .Take(10)
+                .Take(3)
                 .ToList();
+
 
             var allResults = recentRuns.SelectMany(r => r.Results).ToList();
             double globalSuccessRate = allResults.Any()
@@ -101,6 +123,7 @@ namespace TestHub.Api.Controllers
             return Ok(new
             {
                 LastDayTests = lastDayTests,
+                LastDaySummary = lastDaySummary,
                 SuccessRateBySource = successRateBySource,
                 SuccessRate7Days = successRate7Days,
                 AvgDuration7Days = avgDuration7Days,
