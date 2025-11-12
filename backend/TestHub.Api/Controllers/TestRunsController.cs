@@ -26,8 +26,19 @@ namespace TestHub.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TestRun>> PostRun(TestRunRequest request)
+        public async Task<ActionResult<TestRun>> PostRun([FromBody] TestRunRequest request)
         {
+            if (!Request.Headers.TryGetValue("X-Auth-Token", out var receivedToken))
+                return Unauthorized("Missing token");
+
+            var expectedToken = Environment.GetEnvironmentVariable("TESTHUB_TOKEN");
+
+            if (string.IsNullOrEmpty(expectedToken))
+                return StatusCode(500, "Server token not configured");
+
+            if (receivedToken != expectedToken)
+                return Unauthorized("Invalid token");
+
             var project = await _context.Projects
                 .FirstOrDefaultAsync(p => p.Name == request.ProjectName);
 
@@ -52,6 +63,7 @@ namespace TestHub.Api.Controllers
 
             return CreatedAtAction(nameof(PostRun), new { id = run.Id }, run);
         }
+
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TestRun>>> GetRuns([FromQuery] int? projectId)
