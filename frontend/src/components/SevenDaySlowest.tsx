@@ -16,7 +16,7 @@ export default function SevenDayMostFailed({ data, darkMode }: SevenDaySlowestPr
                         <div className='d-flex fw-bold mb-2'>
                             <div style={{ width: '50%' }}>Test Name</div>
                             <div style={{ width: '25%' }}>Toal Executions</div>
-                            <div style={{ width: '25%' }}>Total Fails</div>
+                            <div style={{ width: '25%' }}>Avg Duration</div>
                         </div>
                         {/* Rows */}
                         {data.map((t, i) => (
