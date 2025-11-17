@@ -1,12 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using TestHub.Api.Data;
-using TestHub.Api.Models;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<TestHubContext>(opt =>
-opt.UseSqlite(builder.Configuration.GetConnectionString("TestHubConnectionString")));
+var cs = builder.Configuration.GetConnectionString("TestHubConnectionString");
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDbContext<TestHubContext>(opt => opt.UseSqlite(cs));
+}
+else
+{
+    builder.Services.AddDbContext<TestHubContext>(opt => opt.UseSqlServer(cs));
+}
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -45,7 +52,7 @@ app.MapFallbackToFile("index.html");
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<TestHubContext>();
-    db.Database.EnsureCreated();
+    db.Database.Migrate();
 }
 
 app.Run();
