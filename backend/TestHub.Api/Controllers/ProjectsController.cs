@@ -19,8 +19,9 @@ namespace TestHub.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
+            // I order it in descending order so that the empty project is at the end.
             var projects = await _context.Projects
-                .OrderBy(p => p.Name)
+                .OrderByDescending(p => p.Id)
                 .ToListAsync();
 
             return Ok(projects);
