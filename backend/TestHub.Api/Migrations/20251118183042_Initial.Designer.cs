@@ -11,8 +11,8 @@ using TestHub.Api.Data;
 namespace TestHub.Api.Migrations
 {
     [DbContext(typeof(TestHubContext))]
-    [Migration("20251117190544_Fix")]
-    partial class Fix
+    [Migration("20251118183042_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
