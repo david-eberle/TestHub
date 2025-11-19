@@ -12,7 +12,15 @@ if (builder.Environment.IsDevelopment())
 }
 else
 {
-    builder.Services.AddDbContext<TestHubContext>(opt => opt.UseSqlServer(cs));
+    builder.Services.AddDbContext<TestHubContext>(opt =>
+        opt.UseSqlServer(cs, sql =>
+            sql.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null
+            )
+        )
+    );
 }
 
 builder.Services.AddControllers()
@@ -52,7 +60,11 @@ app.MapFallbackToFile("index.html");
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<TestHubContext>();
-    db.Database.Migrate();
+    if (app.Environment.IsDevelopment())
+        db.Database.EnsureCreated();
+    else
+        db.Database.Migrate();
 }
+
 
 app.Run();
