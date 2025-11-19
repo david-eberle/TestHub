@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { getProjects } from '../api/testhubApi'
 import Dashboard from './Dashboard'
 
@@ -11,6 +11,7 @@ export default function ProjectSelector() {
     const [projects, setProjects] = useState<Project[]>([])
     const [darkMode, setDarkMode] = useState(true)
     const [activeProject, setActiveProject] = useState<Project | null>(null)
+    const lastSelectionTime = useRef(Date.now())
 
     useEffect(() => {
         getProjects()
@@ -22,15 +23,31 @@ export default function ProjectSelector() {
     }, [])
 
     const handleSelect = (p: Project) => {
-        if (activeProject?.id !== p.id) setActiveProject(p)
+        if (activeProject?.id !== p.id) {
+            setActiveProject(p)
+            lastSelectionTime.current = Date.now()
+        }
     }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            getProjects()
+                .then(data => {
+                    setProjects(data)
+                    if (activeProject && !data.find(p => p.id === activeProject.id)) {
+                        setActiveProject(data[0] || null)
+                    }
+                })
+                .catch(console.error)
+        }, 60000)
+
+        return () => clearInterval(interval)
+    }, [activeProject])
 
     return (
         <div className={darkMode ? 'bg-dark text-white min-vh-100' : 'bg-light text-dark min-vh-100'}>
             <div className="container-fluid p-3">
-
                 <div className="d-flex align-items-center mb-4">
-
                     <div className="me-3">
                         <h2 className="mb-0">⚙️ TestHub</h2>
                     </div>
@@ -40,8 +57,7 @@ export default function ProjectSelector() {
                             <ul className="nav nav-tabs justify-content-left mb-0">
                                 <li className="nav-item">
                                     <span
-                                        className={`nav-link disabled ${darkMode ? 'bg-secondary text-white' : ''
-                                            }`}
+                                        className={`nav-link disabled ${darkMode ? 'bg-secondary text-white' : ''}`}
                                         style={{ margin: '0 5px', cursor: 'default' }}
                                     >
                                         No projects available
@@ -53,8 +69,7 @@ export default function ProjectSelector() {
                                 {projects.map(p => (
                                     <li className="nav-item" key={p.id}>
                                         <button
-                                            className={`nav-link ${activeProject?.id === p.id ? 'active' : ''
-                                                } ${darkMode && activeProject?.id !== p.id ? 'bg-secondary text-white' : ''}`}
+                                            className={`nav-link ${activeProject?.id === p.id ? 'active' : ''} ${darkMode && activeProject?.id !== p.id ? 'bg-secondary text-white' : ''}`}
                                             style={{ cursor: 'pointer', margin: '0 5px' }}
                                             onClick={() => handleSelect(p)}
                                         >
@@ -64,9 +79,7 @@ export default function ProjectSelector() {
                                 ))}
                             </ul>
                         )}
-
                     </div>
-
 
                     <div className="ms-3">
                         <button
@@ -87,7 +100,5 @@ export default function ProjectSelector() {
                 )}
             </div>
         </div>
-
-
     )
 }
