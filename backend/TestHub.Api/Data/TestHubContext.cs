@@ -12,7 +12,7 @@ namespace TestHub.Api.Data
         public DbSet<Project> Projects { get; set; }
         public DbSet<TestRun> TestRuns { get; set; }
         public DbSet<TestResult> TestResults { get; set; }
-
+        public DbSet<ErrorMessage> ErrorMessages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

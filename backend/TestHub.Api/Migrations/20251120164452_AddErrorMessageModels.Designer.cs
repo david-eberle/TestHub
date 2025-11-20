@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestHub.Api.Data;
 
@@ -11,9 +12,11 @@ using TestHub.Api.Data;
 namespace TestHub.Api.Migrations
 {
     [DbContext(typeof(TestHubContext))]
-    partial class TestHubContextModelSnapshot : ModelSnapshot
+    [Migration("20251120164452_AddErrorMessageModels")]
+    partial class AddErrorMessageModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

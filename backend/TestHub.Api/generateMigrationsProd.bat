@@ -6,7 +6,7 @@ REM Put into Production mode
 set ASPNETCORE_ENVIRONMENT=Production
 
 REM Generate migration pointing to SQL Server
-dotnet ef migrations add InitialCreate --context TestHubContext
+dotnet ef migrations add AddErrorMessageModels --context TestHubContext
 
 REM Return to previous value (or Development)
 set ASPNETCORE_ENVIRONMENT=%OLD_ENV%

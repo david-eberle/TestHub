@@ -21,8 +21,18 @@ namespace TestHub.Api.Controllers
             public string ProjectName { get; set; } = "N/D";
             public string Source { get; set; } = "N/D";
             public string TriggeredBy { get; set; } = "N/D";
+            public string ErrorMsg { get; set; } = "N/D";
             public DateTime? Timestamp { get; set; }
-            public required List<TestResult> Results { get; set; }
+            public required List<TestResultRequest> Results { get; set; }
+        }
+
+        public class TestResultRequest
+        {
+            public string Name { get; set; } = "N/D";
+            public bool Passed { get; set; }
+            public double Duration { get; set; }
+            public string LogUrl { get; set; } = "N/D";
+            public string ErrorMsg { get; set; } = "";
         }
 
         [HttpPost]
@@ -54,9 +64,36 @@ namespace TestHub.Api.Controllers
                 ProjectId = project.Id,
                 Source = request.Source,
                 Timestamp = request.Timestamp ?? DateTime.UtcNow,
-                TriggeredBy = request.TriggeredBy,
-                Results = request.Results
+                TriggeredBy = request.TriggeredBy
             };
+            foreach (var r in request.Results)
+            {
+                int? errorMessageId = null;
+
+                if (!r.Passed && !string.IsNullOrWhiteSpace(r.ErrorMsg))
+                {
+                    var existing = await _context.ErrorMessages
+                        .FirstOrDefaultAsync(e => e.Description == r.ErrorMsg);
+
+                    if (existing == null)
+                    {
+                        existing = new ErrorMessage { Description = r.ErrorMsg };
+                        _context.ErrorMessages.Add(existing);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    errorMessageId = existing.Id;
+                }
+
+                run.Results.Add(new TestResult
+                {
+                    Name = r.Name,
+                    Passed = r.Passed,
+                    Duration = r.Duration,
+                    LogUrl = r.LogUrl,
+                    ErrorMessageId = errorMessageId
+                });
+            }
 
             _context.TestRuns.Add(run);
             await _context.SaveChangesAsync();
