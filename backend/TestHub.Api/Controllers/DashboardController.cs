@@ -59,18 +59,25 @@ namespace TestHub.Api.Controllers
                 TotalMinutes = Math.Round(totalMinutes, 2)
             };
 
-            var successRateBySource = lastDayRuns
-                .GroupBy(r => r.Source)
+            var successRateBySource = recentRuns
+                .GroupBy(r => new { r.Source, Date = r.Timestamp.Date })
+                .Select(g => new
+                {
+                    g.Key.Source,
+                    g.Key.Date,
+                    DailySuccess = g.SelectMany(r => r.Results).Any()
+                        ? (double)g.SelectMany(r => r.Results).Count(r => r.Passed) * 100.0 /
+                        g.SelectMany(r => r.Results).Count()
+                        : 0
+                })
+                .GroupBy(x => x.Source)
                 .Select(g => new
                 {
                     Source = g.Key,
-                    SuccessRate = g.SelectMany(r => r.Results).Any()
-                        ? Math.Round(
-                            g.SelectMany(r => r.Results).Count(r => r.Passed) * 100.0 /
-                            g.SelectMany(r => r.Results).Count(), 2)
-                        : 0
+                    SuccessRate = Math.Round(g.Average(x => x.DailySuccess), 2)
                 })
                 .ToList();
+
 
             var successRate7Days = recentRuns
                 .GroupBy(r => new { Date = r.Timestamp.Date, r.Source })
